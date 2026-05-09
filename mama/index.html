@@ -1,0 +1,1588 @@
+<!doctype html>
+<html lang="mn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Хоолны цэс гаргах програм</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #ffffff;
+        --bg2: #f5f5f3;
+        --bg3: #eeede9;
+        --text: #1a1a1a;
+        --text2: #555550;
+        --text3: #999991;
+        --border: rgba(0, 0, 0, 0.12);
+        --border2: rgba(0, 0, 0, 0.22);
+        --green: #639922;
+        --green-dark: #3b6d11;
+        --green-light: #eaf3de;
+        --radius-md: 8px;
+        --radius-lg: 12px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #1c1c1a;
+          --bg2: #252522;
+          --bg3: #2e2e2b;
+          --text: #f0efe9;
+          --text2: #aaa99f;
+          --text3: #6b6a62;
+          --border: rgba(255, 255, 255, 0.1);
+          --border2: rgba(255, 255, 255, 0.2);
+          --green-light: #1e3310;
+        }
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg3);
+        color: var(--text);
+        min-height: 100vh;
+        padding: 1rem;
+      }
+
+      .app {
+        max-width: 1020px;
+        margin: 0 auto;
+        background: var(--bg);
+        border-radius: var(--radius-lg);
+        border: 0.5px solid var(--border);
+        padding: 1.1rem 1.25rem 1.25rem;
+      }
+
+      /* Header */
+      .hdr {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 8px;
+      }
+      .hdr-left p {
+        font-size: 12px;
+        color: var(--text3);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 2px;
+      }
+      .hdr-left h1 {
+        font-size: 15px;
+        font-weight: 500;
+      }
+      .hdr-right {
+        text-align: right;
+        font-size: 12px;
+        color: var(--text2);
+        line-height: 1.7;
+      }
+
+      /* Date bar */
+      .date-bar {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 10px;
+        font-size: 12px;
+        color: var(--text2);
+        flex-wrap: wrap;
+      }
+      .date-bar input[type="date"] {
+        font-size: 12px;
+        padding: 4px 8px;
+        border: 0.5px solid var(--border2);
+        border-radius: var(--radius-md);
+        background: var(--bg);
+        color: var(--text);
+        width: 115px;
+      }
+      .wk {
+        font-size: 12px;
+        color: var(--text3);
+      }
+
+      /* Actions */
+      .actions {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .btn-exp {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        border: none;
+        border-radius: var(--radius-md);
+        padding: 7px 14px;
+        font-size: 12px;
+        cursor: pointer;
+        color: #fff;
+        transition: opacity 0.12s;
+      }
+      .btn-exp:hover {
+        opacity: 0.85;
+      }
+      .btn-exp.pdf {
+        background: var(--green);
+      }
+      .btn-exp.word {
+        background: #1e5fa8;
+      }
+
+      /* Layout */
+      .main {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+      }
+      .plan-wrap {
+        flex: 1;
+        min-width: 0;
+        overflow-x: auto;
+      }
+
+      /* Table */
+      .plan-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        table-layout: fixed;
+      }
+      .plan-table th,
+      .plan-table td {
+        border: 0.5px solid var(--border);
+        padding: 5px 6px;
+        text-align: center;
+        vertical-align: middle;
+      }
+      .plan-table th {
+        background: var(--bg2);
+        font-weight: 500;
+        color: var(--text2);
+        font-size: 12px;
+      }
+      .meal-lbl {
+        background: var(--bg2);
+        font-weight: 500;
+        font-size: 12px;
+        color: var(--text2);
+        white-space: nowrap;
+        width: 68px;
+      }
+      .meal-cell {
+        cursor: pointer;
+        min-height: 60px;
+        vertical-align: top;
+        transition: background 0.12s;
+      }
+      .meal-cell:hover {
+        background: var(--bg2);
+      }
+      .meal-cell.sel {
+        background: var(--green-light);
+        outline: 1.5px solid var(--green);
+        outline-offset: -1.5px;
+      }
+      .chip {
+        display: block;
+        font-size: 12px;
+        line-height: 1.5;
+        text-align: left;
+        padding: 0 1px;
+      }
+      .hint {
+        color: var(--text3);
+        font-size: 12px;
+        font-style: italic;
+      }
+      .kcal-row td {
+        background: var(--bg2);
+        font-size: 12px;
+      }
+      .kcal-val {
+        color: var(--green-dark);
+        font-weight: 500;
+        font-size: 12px;
+      }
+      .scroll-hint {
+        font-size: 12px;
+        color: var(--text3);
+        text-align: right;
+        margin-bottom: 4px;
+        display: none;
+      }
+
+      /* Sidebar */
+      .side {
+        width: 240px;
+        flex-shrink: 0;
+      }
+      .tabs {
+        display: flex;
+        border-bottom: 0.5px solid var(--border);
+        margin-bottom: 10px;
+      }
+      .tab {
+        font-size: 12px;
+        padding: 6px 9px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: var(--text2);
+        border-bottom: 2px solid transparent;
+        margin-bottom: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .tab.on {
+        color: var(--green);
+        border-bottom-color: var(--green);
+        font-weight: 500;
+      }
+      .card {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 10px 12px;
+        margin-bottom: 8px;
+      }
+      .card h3 {
+        font-size: 12px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .info-bar {
+        font-size: 12px;
+        font-weight: 500;
+        padding: 7px 10px;
+        background: var(--bg2);
+        border-radius: var(--radius-md);
+        margin-bottom: 8px;
+        border: 0.5px solid var(--border);
+      }
+      .info-bar span {
+        font-size: 12px;
+        color: var(--text3);
+        font-weight: 400;
+        display: block;
+        margin-top: 1px;
+      }
+
+      /* Category filters */
+      .cats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+        margin-bottom: 8px;
+      }
+      .cat {
+        font-size: 12px;
+        padding: 3px 8px;
+        border: 0.5px solid var(--border2);
+        border-radius: 99px;
+        background: transparent;
+        cursor: pointer;
+        color: var(--text2);
+        transition: all 0.1s;
+      }
+      .cat.on {
+        background: var(--green-light);
+        border-color: var(--green);
+        color: var(--green-dark);
+      }
+
+      /* Food items */
+      .scroll {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .fi {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 0;
+        border-bottom: 0.5px solid var(--border);
+        cursor: pointer;
+        user-select: none;
+      }
+      .fi:last-child {
+        border-bottom: none;
+      }
+      .fi input[type="checkbox"] {
+        accent-color: var(--green);
+        flex-shrink: 0;
+      }
+      .fi-name {
+        font-size: 12px;
+        flex: 1;
+        text-align: left;
+      }
+      .fi-k {
+        font-size: 12px;
+        color: var(--text3);
+        flex-shrink: 0;
+      }
+      .fi-del {
+        font-size: 15px;
+        cursor: pointer;
+        color: var(--text3);
+        flex-shrink: 0;
+        line-height: 1;
+        transition: color 0.1s;
+      }
+      .fi-del:hover {
+        color: #c0392b;
+      }
+
+      /* Used in another meal slot of the same day → blocked */
+      .fi.used-day {
+        opacity: 0.35;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+      .fi.used-day .fi-badge {
+        font-size: 12px;
+        color: var(--text3);
+        background: var(--bg2);
+        border-radius: 99px;
+        padding: 1px 6px;
+        margin-left: 4px;
+        white-space: nowrap;
+      }
+
+      /* Form */
+      .fg {
+        margin-bottom: 7px;
+      }
+      .fg label {
+        display: block;
+        font-size: 12px;
+        color: var(--text2);
+        margin-bottom: 3px;
+      }
+      .fg input,
+      .fg select {
+        width: 100%;
+        font-size: 12px;
+        padding: 6px 8px;
+        border: 0.5px solid var(--border2);
+        border-radius: var(--radius-md);
+        background: var(--bg);
+        color: var(--text);
+        outline: none;
+      }
+      .fg input:focus,
+      .fg select:focus {
+        border-color: var(--green);
+        box-shadow: 0 0 0 2px rgba(99, 153, 34, 0.18);
+      }
+      .btn-g {
+        background: var(--green);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-md);
+        padding: 7px 14px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: background 0.12s;
+      }
+      .btn-g:hover {
+        background: var(--green-dark);
+      }
+      .btn-c {
+        background: transparent;
+        border: 0.5px solid var(--border2);
+        border-radius: var(--radius-md);
+        padding: 6px 11px;
+        font-size: 12px;
+        cursor: pointer;
+        color: var(--text2);
+      }
+      .btn-c:hover {
+        background: var(--bg2);
+      }
+
+      /* Toast */
+      .toast {
+        display: none;
+        position: fixed;
+        bottom: 18px;
+        right: 18px;
+        background: var(--green-dark);
+        color: #fff;
+        font-size: 12px;
+        padding: 7px 14px;
+        border-radius: var(--radius-md);
+        z-index: 9999;
+      }
+
+      /* ════════════ MOBILE ≤660px ════════════ */
+      @media (max-width: 660px) {
+        body {
+          padding: 0.5rem;
+        }
+        .app {
+          padding: 0.85rem 0.85rem 1rem;
+          border-radius: 10px;
+        }
+        .hdr-right {
+          text-align: left;
+        }
+        .btn-exp {
+          padding: 10px 14px;
+          font-size: 13px;
+          flex: 1;
+          justify-content: center;
+        }
+        .plan-wrap {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .plan-table {
+          font-size: 12px;
+          min-width: 460px;
+        }
+        .meal-cell {
+          min-height: 50px;
+        }
+        .chip {
+          font-size: 12px;
+        }
+        .meal-lbl {
+          width: 56px;
+          font-size: 12px;
+        }
+        .scroll-hint {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 3px;
+        }
+        .side {
+          display: none;
+        }
+
+        /* Bottom drawer */
+        .mob-drawer {
+          display: none;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: var(--bg);
+          border-top: 1px solid var(--border2);
+          border-radius: 16px 16px 0 0;
+          z-index: 1000;
+          padding: 0 1rem 1.5rem;
+          max-height: 78vh;
+          overflow: hidden;
+          flex-direction: column;
+          transform: translateY(100%);
+          transition: transform 0.26s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .mob-drawer.open {
+          display: flex;
+          transform: translateY(0);
+        }
+        .drawer-handle {
+          width: 36px;
+          height: 4px;
+          background: var(--border2);
+          border-radius: 2px;
+          margin: 10px auto 10px;
+          flex-shrink: 0;
+        }
+        .drawer-hdr {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-bottom: 10px;
+          flex-shrink: 0;
+          border-bottom: 0.5px solid var(--border);
+          margin-bottom: 8px;
+        }
+        .drawer-hdr strong {
+          font-size: 14px;
+          font-weight: 500;
+        }
+        .drawer-close {
+          background: var(--bg2);
+          border: none;
+          border-radius: 50%;
+          width: 30px;
+          height: 30px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--text2);
+          font-size: 16px;
+        }
+
+        /* Drawer sub-tabs */
+        .drawer-tabs {
+          display: flex;
+          margin-bottom: 10px;
+          flex-shrink: 0;
+          border-radius: var(--radius-md);
+          overflow: hidden;
+          border: 0.5px solid var(--border2);
+        }
+        .dtab {
+          flex: 1;
+          padding: 9px 0;
+          font-size: 12px;
+          font-weight: 500;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          color: var(--text2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+        }
+        .dtab:not(:last-child) {
+          border-right: 0.5px solid var(--border2);
+        }
+        .dtab.on {
+          background: var(--green);
+          color: #fff;
+        }
+
+        /* Cat bar — horizontal scroll */
+        .mob-cats {
+          display: flex;
+          gap: 5px;
+          overflow-x: auto;
+          padding-bottom: 6px;
+          flex-shrink: 0;
+          margin-bottom: 4px;
+        }
+        .mob-cats::-webkit-scrollbar {
+          display: none;
+        }
+        .mob-cats .cat {
+          white-space: nowrap;
+          padding: 6px 12px;
+          font-size: 12px;
+        }
+
+        /* Mob food list */
+        .mob-scroll {
+          overflow-y: auto;
+          flex: 1;
+        }
+        .mob-scroll .fi {
+          padding: 11px 0;
+        }
+        .mob-scroll .fi-name {
+          font-size: 13.5px;
+        }
+        .mob-scroll .fi input[type="checkbox"] {
+          width: 20px;
+          height: 20px;
+        }
+        .mob-scroll .fi-k {
+          font-size: 12px;
+        }
+        .mob-scroll .fi.used-day .fi-badge {
+          font-size: 12px;
+        }
+
+        /* Mob add form */
+        .mob-add {
+          overflow-y: auto;
+          flex: 1;
+          padding-top: 4px;
+        }
+        .mob-add .fg input,
+        .mob-add .fg select {
+          font-size: 15px;
+          padding: 10px;
+        }
+        .mob-add .fg label {
+          font-size: 12px;
+          margin-bottom: 4px;
+        }
+        .mob-add .btn-g {
+          width: 100%;
+          padding: 13px;
+          font-size: 15px;
+          margin-top: 8px;
+        }
+
+        /* Overlay */
+        .mob-overlay {
+          display: none;
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.4);
+          z-index: 999;
+        }
+        .mob-overlay.open {
+          display: block;
+        }
+      }
+
+      /* ════════════ PRINT ════════════ */
+      @media print {
+        @page {
+          size: A4 portrait;
+          margin: 15mm 12mm 18mm 12mm;
+        }
+        * {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        body {
+          background: #ffffff !important;
+          padding: 0 !important;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+        .app,
+        .toast,
+        .mob-drawer,
+        .mob-overlay {
+          display: none !important;
+        }
+        #printDoc {
+          display: block !important;
+          width: 100%;
+          color: #000;
+          font-size: 12pt;
+        }
+        .p-batlaw {
+          text-align: right;
+          font-size: 12pt;
+          line-height: 1.7;
+          margin-bottom: 30pt;
+        }
+        .p-title {
+          text-align: center;
+          font-size: 12pt;
+          text-transform: uppercase;
+          margin-bottom: 4pt;
+        }
+        .p-daterange {
+          text-align: center;
+          font-size: 12pt;
+          margin-bottom: 10pt;
+        }
+        .p-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 12pt;
+          table-layout: fixed;
+        }
+        .p-table th,
+        .p-table td {
+          border: 0.25pt solid #000;
+          padding: 4pt 3pt;
+          text-align: center;
+          vertical-align: middle;
+          line-height: 1.5;
+        }
+        .p-table th {
+          font-weight: normal;
+          background: #ffffff !important;
+          font-size: 12pt;
+        }
+        .p-table .row-lbl {
+          background: #ffffff !important;
+        }
+        .p-table .kcal-cell {
+          background: #ffffff !important;
+        }
+        .p-sigs {
+          margin-top: 80pt;
+          font-size: 12pt;
+          line-height: 2.2;
+          text-align: left;
+          margin-left: 300px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div class="hdr">
+        <div class="hdr-left">
+          <p>
+            Өлгий сумын хүүхдийн 4 дүгээр цэцэрлэгийн эрхлэгч
+            .........../Н.Бейбитгүл/
+          </p>
+          <h1>5 Хоногийн Хоолны Цэс</h1>
+        </div>
+        <div class="hdr-right">
+          <div>
+            Ахлах тогооч: <strong style="font-weight: 500">Х.Жайнар</strong>
+          </div>
+          <div>
+            Хянасан эмч: <strong style="font-weight: 500">С.Халамхас</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="date-bar">
+        <i
+          class="ti ti-calendar"
+          aria-hidden="true"
+          style="font-size: 15px"
+        ></i>
+        <input type="date" id="d1" value="2026-05-11" onchange="updateDate()" />
+        <span>–</span>
+        <input type="date" id="d2" value="2026-05-15" onchange="updateDate()" />
+        <span class="wk" id="wkLabel"></span>
+      </div>
+
+      <div class="actions">
+        <button class="btn-exp pdf" onclick="exportPDF()">
+          <i class="ti ti-file-text" aria-hidden="true"></i> PDF хэвлэх
+        </button>
+        <button class="btn-exp word" id="btnWord" onclick="exportWord()">
+          <i class="ti ti-file-word" aria-hidden="true"></i> Word татах
+        </button>
+      </div>
+
+      <div class="main">
+        <div class="plan-wrap">
+          <div class="scroll-hint">
+            <i class="ti ti-arrows-left-right" aria-hidden="true"></i> хэвтээ
+            гүйлгэнэ
+          </div>
+          <table class="plan-table">
+            <thead>
+              <tr>
+                <th style="width: 68px">Гараг</th>
+                <th>Даваа</th>
+                <th>Мягмар</th>
+                <th>Лхагва</th>
+                <th>Пүрэв</th>
+                <th>Баасан</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+
+        <!-- Desktop sidebar -->
+        <div class="side">
+          <div class="tabs">
+            <button class="tab on" id="tPicker" onclick="sw('picker')">
+              <i class="ti ti-check" aria-hidden="true"></i> Сонгох
+            </button>
+            <button class="tab" id="tAdd" onclick="sw('add')">
+              <i class="ti ti-plus" aria-hidden="true"></i> Нэмэх
+            </button>
+            <button class="tab" id="tManage" onclick="sw('manage')">
+              <i class="ti ti-list" aria-hidden="true"></i> Жагсаалт
+            </button>
+          </div>
+          <div id="pPicker">
+            <div class="info-bar" id="infoBar">
+              Нүд сонгоно уу<span
+                >Хүснэгтийн нүдэн дээр дарж хоол сонгоно уу</span
+              >
+            </div>
+            <div class="card" style="padding-bottom: 6px">
+              <div class="cats" id="catBar"></div>
+              <div class="scroll" id="pickList"></div>
+            </div>
+          </div>
+          <div id="pAdd" style="display: none">
+            <div class="card">
+              <h3>
+                <i class="ti ti-plus" aria-hidden="true"></i> Шинэ хоол нэмэх
+              </h3>
+              <div class="fg">
+                <label>Нэр</label
+                ><input
+                  type="text"
+                  id="nName"
+                  placeholder="Жишээ: Гоймонтой шөл..."
+                />
+              </div>
+              <div class="fg">
+                <label>Ангилал</label>
+                <select id="nCat">
+                  <option value="Шөл">Шөл</option>
+                  <option value="Хоол">Хоол (Үндсэн)</option>
+                  <option value="Талх">Талх / Булочка</option>
+                  <option value="Шүүс">Шүүс / Ундаа</option>
+                  <option value="Жимс">Жимс / Ногоо</option>
+                  <option value="Сүүн">Сүүн бүтээгдэхүүн</option>
+                  <option value="Бусад">Бусад</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Илчлэг (ккал)</label
+                ><input type="number" id="nKcal" placeholder="0" min="0" />
+              </div>
+              <div style="display: flex; gap: 7px; margin-top: 10px">
+                <button class="btn-g" onclick="addFood()">Нэмэх</button>
+                <button class="btn-c" onclick="sw('picker')">Болих</button>
+              </div>
+            </div>
+          </div>
+          <div id="pManage" style="display: none">
+            <div class="card">
+              <h3>
+                <i class="ti ti-database" aria-hidden="true"></i> Нийт хоолнууд
+              </h3>
+              <div class="scroll" id="manList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile overlay -->
+    <div class="mob-overlay" id="mobOverlay" onclick="closeDrawer()"></div>
+
+    <!-- Mobile bottom drawer -->
+    <div class="mob-drawer" id="mobDrawer">
+      <div class="drawer-handle"></div>
+      <div class="drawer-hdr">
+        <strong id="drawerTitle">Хоол сонгох</strong>
+        <button class="drawer-close" onclick="closeDrawer()">
+          <i class="ti ti-x" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="drawer-tabs">
+        <button class="dtab on" id="dtPicker" onclick="dsw('picker')">
+          <i class="ti ti-check" aria-hidden="true"></i> Сонгох
+        </button>
+        <button class="dtab" id="dtAdd" onclick="dsw('add')">
+          <i class="ti ti-plus" aria-hidden="true"></i> Нэмэх
+        </button>
+      </div>
+      <div
+        id="dpPicker"
+        style="
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          overflow: hidden;
+          min-height: 0;
+        "
+      >
+        <div class="mob-cats" id="mobCatBar"></div>
+        <div class="mob-scroll" id="mobPickList"></div>
+      </div>
+      <div id="dpAdd" style="display: none" class="mob-add">
+        <div class="fg">
+          <label>Нэр</label
+          ><input
+            type="text"
+            id="mnName"
+            placeholder="Жишээ: Гоймонтой шөл..."
+          />
+        </div>
+        <div class="fg">
+          <label>Ангилал</label>
+          <select id="mnCat">
+            <option value="Шөл">Шөл</option>
+            <option value="Хоол">Хоол (Үндсэн)</option>
+            <option value="Талх">Талх / Булочка</option>
+            <option value="Шүүс">Шүүс / Ундаа</option>
+            <option value="Жимс">Жимс / Ногоо</option>
+            <option value="Сүүн">Сүүн бүтээгдэхүүн</option>
+            <option value="Бусад">Бусад</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Илчлэг (ккал)</label
+          ><input type="number" id="mnKcal" placeholder="0" min="0" />
+        </div>
+        <button class="btn-g" onclick="addFoodMob()">Нэмэх</button>
+      </div>
+    </div>
+
+    <!-- Print document -->
+    <div id="printDoc" style="display: none">
+      <div class="p-batlaw">
+        БАТЛАВ<br />ӨЛГИЙ СУМЫН ХҮҮХДИЙН<br />4 ДҮГЭЭР ЦЭЦЭРЛЭГИЙН<br />
+        ЭРХЛЭГЧ............./Н.БЕЙБИТГҮЛ/<br /><span id="p-batlaw-date"></span>
+      </div>
+      <div class="p-title">
+        Өлгий сумын хүүхдийн 4 дүгээр цэцэрлэгийн 5 хоногийн хоолны цэс
+      </div>
+      <div class="p-daterange" id="p-daterange"></div>
+      <table class="p-table">
+        <thead>
+          <tr>
+            <th style="width: 68pt">Гараг</th>
+            <th>Даваа</th>
+            <th>Мягмар</th>
+            <th>Лхагва</th>
+            <th>Пүрэв</th>
+            <th>Баасан</th>
+          </tr>
+        </thead>
+        <tbody id="p-tbody"></tbody>
+      </table>
+      <div class="p-sigs">
+        Ахлах тогооч: ....................../Х. Жайнар/<br />
+        Хянасан эмч: ......................./С. Халамхас/
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+    <script>
+      const DAYS = ["Даваа", "Мягмар", "Лхагва", "Пүрэв", "Баасан"];
+      const MEALS = [
+        { k: "og", l: "Өглөө", s: "10 цаг" },
+        { k: "ud", l: "Өдөр", s: "12 цаг" },
+        { k: "or", l: "Орой", s: "16 цаг" },
+      ];
+      const CATS = [
+        "Бүгд",
+        "Шөл",
+        "Хоол",
+        "Талх",
+        "Шүүс",
+        "Жимс",
+        "Сүүн",
+        "Бусад",
+      ];
+
+      let foods = [
+        { id: 1, n: "Шар будаатай сүүн шөл", c: "Шөл", k: 85 },
+        { id: 2, n: "Хүүхдийн будаатай сүүн шөл", c: "Шөл", k: 90 },
+        { id: 3, n: "Халуун аарц", c: "Шөл", k: 60 },
+        { id: 4, n: "Гоймонтой шөл", c: "Шөл", k: 110 },
+        { id: 5, n: "Хөөц будаатай шөл", c: "Шөл", k: 95 },
+        { id: 6, n: "Гурвалжин будаатай шөл", c: "Шөл", k: 88 },
+        { id: 7, n: "Цагаан будаатай шөл", c: "Шөл", k: 92 },
+        { id: 8, n: "Ногоотой шөл", c: "Шөл", k: 75 },
+        { id: 9, n: "Булочка", c: "Талх", k: 280 },
+        { id: 10, n: "Талх", c: "Талх", k: 265 },
+        { id: 11, n: "Цайны пичен", c: "Талх", k: 210 },
+        { id: 12, n: "Талхан зууш", c: "Талх", k: 120 },
+        { id: 13, n: "Хөөрүүлсэн сүү", c: "Сүүн", k: 65 },
+        { id: 14, n: "Тараг", c: "Сүүн", k: 100 },
+        { id: 15, n: "Шпагетти хуурга", c: "Хоол", k: 180 },
+        { id: 16, n: "Цагаан будаатай хуурга", c: "Хоол", k: 160 },
+        { id: 17, n: "Катлет", c: "Хоол", k: 200 },
+        { id: 18, n: "Цуйван", c: "Хоол", k: 195 },
+        { id: 19, n: "Хар чавганы шүүс", c: "Шүүс", k: 45 },
+        { id: 20, n: "Чацарганы шүүс", c: "Шүүс", k: 55 },
+        { id: 21, n: "Үзэмний шүүс", c: "Шүүс", k: 60 },
+        { id: 22, n: "Чангаанзны шүүс", c: "Шүүс", k: 50 },
+        { id: 23, n: "Огурци", c: "Жимс", k: 15 },
+        { id: 24, n: "Алим", c: "Жимс", k: 52 },
+        { id: 25, n: "Банан", c: "Жимс", k: 89 },
+        { id: 26, n: "Помидор", c: "Жимс", k: 18 },
+        { id: 27, n: "Мандарин", c: "Жимс", k: 53 },
+        { id: 28, n: "Зөгийн балтай ус", c: "Бусад", k: 304 },
+      ];
+
+      let plan = {};
+      DAYS.forEach((_, d) => {
+        plan[d] = {};
+        MEALS.forEach((m) => {
+          plan[d][m.k] = new Set();
+        });
+      });
+      [
+        [0, "og", [1, 9]],
+        [0, "ud", [7, 10]],
+        [0, "or", [15, 19, 23]],
+        [1, "og", [2, 9]],
+        [1, "ud", [6, 10]],
+        [1, "or", [18, 20, 24]],
+        [2, "og", [3, 9]],
+        [2, "ud", [8, 10]],
+        [2, "or", [17, 21, 25]],
+        [3, "og", [4, 9]],
+        [3, "ud", [16, 10]],
+        [3, "or", [22, 26]],
+        [4, "og", [13, 12, 11]],
+        [4, "ud", [5, 10]],
+        [4, "or", [14, 9, 28, 27]],
+      ].forEach(([d, m, ids]) => ids.forEach((id) => plan[d][m].add(id)));
+
+      let sel = null,
+        activeCat = "Бүгд",
+        nid = 29;
+      const isMob = () => window.innerWidth <= 660;
+
+      /* All ids used anywhere in day d */
+      function dayUsedSet(d) {
+        const s = new Set();
+        MEALS.forEach((m) => plan[d][m.k].forEach((id) => s.add(id)));
+        return s;
+      }
+
+      /* Build a single food list row.
+   inCell  = food is selected in the currently active cell
+   dayUsed = Set of all ids used anywhere today */
+      function makeFI(f, inCell, dayUsed) {
+        const inOther = !inCell && dayUsed.has(f.id);
+        const cls = "fi" + (inOther ? " used-day" : "");
+        const act = inOther ? "" : `onclick="toggle(${f.id})"`;
+        const chk = inOther
+          ? ""
+          : `onclick="event.stopPropagation();toggle(${f.id})"`;
+        const badge = inOther
+          ? `<span class="fi-badge">өөр цагт байна</span>`
+          : "";
+        return `<div class="${cls}" ${act}>
+    <input type="checkbox" ${inCell ? "checked" : ""} ${inOther ? "disabled" : ""} ${chk}>
+    <span class="fi-name">${f.n}${badge}</span>
+    <span class="fi-k">${f.k}к</span>
+  </div>`;
+      }
+
+      /* ── Render table ── */
+      function renderTable() {
+        let h = "";
+        MEALS.forEach((ml) => {
+          h += `<tr><td class="meal-lbl">${ml.l}<br><span style="font-weight:400;color:var(--text3);font-size:12px">/${ml.s}/</span></td>`;
+          DAYS.forEach((_, d) => {
+            const isSel = sel && sel.d === d && sel.m === ml.k;
+            const chips = [...plan[d][ml.k]]
+              .map((id) => {
+                const f = foods.find((x) => x.id === id);
+                return f ? `<span class="chip">${f.n}</span>` : "";
+              })
+              .join("");
+            h += `<td class="meal-cell${isSel ? " sel" : ""}" onclick="pick(${d},'${ml.k}')">${chips || '<span class="hint">+ нэмэх</span>'}</td>`;
+          });
+          h += "</tr>";
+        });
+        h +=
+          '<tr class="kcal-row"><td style="font-weight:500;font-size:12px;color:var(--text2)">Илчлэг</td>';
+        DAYS.forEach((_, d) => {
+          let t = 0;
+          MEALS.forEach((m) =>
+            [...plan[d][m.k]].forEach((id) => {
+              const f = foods.find((x) => x.id === id);
+              if (f) t += f.k;
+            }),
+          );
+          h += `<td class="kcal-val">${t} ккал</td>`;
+        });
+        h += "</tr>";
+        document.getElementById("tbody").innerHTML = h;
+      }
+
+      /* ── Cell pick ── */
+      function pick(d, m) {
+        sel = { d, m };
+        renderTable();
+        const ml = MEALS.find((x) => x.k === m);
+        const lbl = `${DAYS[d]} · ${ml.l}`;
+        document.getElementById("infoBar").innerHTML =
+          `${lbl}<span>Хоол сонгохын тулд чагтлана уу</span>`;
+        renderPickList();
+        if (isMob()) {
+          document.getElementById("drawerTitle").textContent = lbl;
+          renderMobCats();
+          renderMobPickList();
+          openDrawer();
+        }
+      }
+
+      /* ── Desktop picker ── */
+      function renderCats() {
+        document.getElementById("catBar").innerHTML = CATS.map(
+          (c) =>
+            `<button class="cat${activeCat === c ? " on" : ""}" onclick="setCat('${c}')">${c}</button>`,
+        ).join("");
+      }
+      function setCat(c) {
+        activeCat = c;
+        renderCats();
+        renderPickList();
+        renderMobCats();
+        renderMobPickList();
+      }
+
+      function renderPickList() {
+        const list =
+          activeCat === "Бүгд" ? foods : foods.filter((f) => f.c === activeCat);
+        const el = document.getElementById("pickList");
+        if (!list.length) {
+          el.innerHTML =
+            '<p style="font-size:11px;color:var(--text2);padding:6px 0">Хоол олдсонгүй</p>';
+          return;
+        }
+        if (!sel) {
+          el.innerHTML = list
+            .map(
+              (f) =>
+                `<div class="fi" style="opacity:.35;pointer-events:none"><input type="checkbox"><span class="fi-name">${f.n}</span><span class="fi-k">${f.k}к</span></div>`,
+            )
+            .join("");
+          return;
+        }
+        const dUsed = dayUsedSet(sel.d);
+        el.innerHTML = list
+          .map((f) => makeFI(f, plan[sel.d][sel.m].has(f.id), dUsed))
+          .join("");
+      }
+
+      /* ── Mobile picker ── */
+      function renderMobCats() {
+        document.getElementById("mobCatBar").innerHTML = CATS.map(
+          (c) =>
+            `<button class="cat${activeCat === c ? " on" : ""}" onclick="setCat('${c}')">${c}</button>`,
+        ).join("");
+      }
+      function renderMobPickList() {
+        const list =
+          activeCat === "Бүгд" ? foods : foods.filter((f) => f.c === activeCat);
+        const el = document.getElementById("mobPickList");
+        if (!sel || !list.length) {
+          el.innerHTML = "";
+          return;
+        }
+        const dUsed = dayUsedSet(sel.d);
+        el.innerHTML = list
+          .map((f) => makeFI(f, plan[sel.d][sel.m].has(f.id), dUsed))
+          .join("");
+      }
+
+      /* ── Toggle ── */
+      function toggle(id) {
+        if (!sel) return;
+        const s = plan[sel.d][sel.m];
+        s.has(id) ? s.delete(id) : s.add(id);
+        renderTable();
+        renderPickList();
+        renderMobPickList();
+      }
+
+      /* ── Manage list ── */
+      function renderManList() {
+        document.getElementById("manList").innerHTML = foods
+          .map(
+            (f) =>
+              `<div class="fi"><span class="fi-name">${f.n}<span style="font-size:9.5px;color:var(--text3)"> [${f.c}]</span></span><span class="fi-k">${f.k}к</span><span class="fi-del" onclick="delFood(${f.id})">×</span></div>`,
+          )
+          .join("");
+      }
+      function delFood(id) {
+        if (!confirm("Энэ хоолыг устгах уу?")) return;
+        foods = foods.filter((f) => f.id !== id);
+        DAYS.forEach((_, d) => MEALS.forEach((m) => plan[d][m.k].delete(id)));
+        renderTable();
+        renderPickList();
+        renderManList();
+        renderMobPickList();
+        toast("Устгагдлаа");
+      }
+
+      /* ── Add food ── */
+      function addFood() {
+        const n = document.getElementById("nName").value.trim(),
+          c = document.getElementById("nCat").value,
+          k = parseInt(document.getElementById("nKcal").value) || 0;
+        if (!n) {
+          alert("Хоолны нэр оруулна уу");
+          return;
+        }
+        foods.push({ id: nid++, n, c, k });
+        document.getElementById("nName").value = "";
+        document.getElementById("nKcal").value = "";
+        renderPickList();
+        renderManList();
+        sw("picker");
+        toast("Нэмэгдлээ ✓");
+      }
+      function addFoodMob() {
+        const n = document.getElementById("mnName").value.trim(),
+          c = document.getElementById("mnCat").value,
+          k = parseInt(document.getElementById("mnKcal").value) || 0;
+        if (!n) {
+          alert("Хоолны нэр оруулна уу");
+          return;
+        }
+        foods.push({ id: nid++, n, c, k });
+        document.getElementById("mnName").value = "";
+        document.getElementById("mnKcal").value = "";
+        renderMobPickList();
+        renderPickList();
+        renderManList();
+        dsw("picker");
+        toast("Нэмэгдлээ ✓");
+      }
+
+      /* ── Panel switches ── */
+      function sw(t) {
+        document.getElementById("pPicker").style.display =
+          t === "picker" ? "block" : "none";
+        document.getElementById("pAdd").style.display =
+          t === "add" ? "block" : "none";
+        document.getElementById("pManage").style.display =
+          t === "manage" ? "block" : "none";
+        ["Picker", "Add", "Manage"].forEach((x) => {
+          const el = document.getElementById("t" + x);
+          if (el) el.classList.toggle("on", x.toLowerCase() === t);
+        });
+        if (t === "manage") renderManList();
+      }
+      function dsw(t) {
+        document.getElementById("dpPicker").style.display =
+          t === "picker" ? "flex" : "none";
+        document.getElementById("dpAdd").style.display =
+          t === "add" ? "block" : "none";
+        document
+          .getElementById("dtPicker")
+          .classList.toggle("on", t === "picker");
+        document.getElementById("dtAdd").classList.toggle("on", t === "add");
+      }
+      function openDrawer() {
+        document.getElementById("mobDrawer").classList.add("open");
+        document.getElementById("mobOverlay").classList.add("open");
+      }
+      function closeDrawer() {
+        document.getElementById("mobDrawer").classList.remove("open");
+        document.getElementById("mobOverlay").classList.remove("open");
+      }
+
+      /* ── Toast ── */
+      function toast(msg) {
+        const el = document.getElementById("toast");
+        el.textContent = msg;
+        el.style.display = "block";
+        clearTimeout(toast._t);
+        toast._t = setTimeout(() => (el.style.display = "none"), 2200);
+      }
+
+      /* ── Date ── */
+      function updateDate() {
+        const a = document.getElementById("d1").value,
+          b = document.getElementById("d2").value;
+        if (a && b)
+          document.getElementById("wkLabel").textContent =
+            `(${a.replaceAll("-", ".")} – ${b.replaceAll("-", ".")})`;
+      }
+
+      /* ── PDF Print ── */
+      function exportPDF() {
+        const d1v = document.getElementById("d1").value,
+          d2v = document.getElementById("d2").value;
+        const now = d1v ? new Date(d1v) : new Date();
+        const mn = [
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06",
+          "07",
+          "08",
+          "09",
+          "10",
+          "11",
+          "12",
+        ];
+        document.getElementById("p-batlaw-date").textContent =
+          now.getFullYear() +
+          " оны " +
+          mn[now.getMonth()] +
+          " дугаар сарын " +
+          now.getDate() +
+          " өдөр";
+        document.getElementById("p-daterange").textContent =
+          d1v && d2v
+            ? d1v.replaceAll("-", ".") + " - " + d2v.replaceAll("-", ".")
+            : "";
+        let h = "";
+        MEALS.forEach((ml) => {
+          h += `<tr><td class="row-lbl">${ml.l}<br>/${ml.s}/</td>`;
+          DAYS.forEach((_, d) => {
+            const lines = [...plan[d][ml.k]]
+              .map((id) => {
+                const f = foods.find((x) => x.id === id);
+                return f ? f.n : "";
+              })
+              .filter(Boolean);
+            h += `<td>${lines.join("<br>") || "—"}</td>`;
+          });
+          h += "</tr>";
+        });
+        h += '<tr><td class="row-lbl kcal-cell">Илчлэг</td>';
+        DAYS.forEach((_, d) => {
+          let t = 0;
+          MEALS.forEach((m) =>
+            [...plan[d][m.k]].forEach((id) => {
+              const f = foods.find((x) => x.id === id);
+              if (f) t += f.k;
+            }),
+          );
+          h += `<td class="kcal-cell">${t} ккал</td>`;
+        });
+        h += "</tr>";
+        document.getElementById("p-tbody").innerHTML = h;
+        window.print();
+      }
+
+      /* ── Word Export ── */
+      async function exportWord() {
+        const btn = document.getElementById("btnWord");
+        btn.textContent = "Үүсгэж байна...";
+        btn.disabled = true;
+        try {
+          const {
+            Document,
+            Packer,
+            Paragraph,
+            TextRun,
+            Table,
+            TableRow,
+            TableCell,
+            AlignmentType,
+            WidthType,
+            BorderStyle,
+            ShadingType,
+            VerticalAlign,
+          } = docx;
+          const d1v = document.getElementById("d1").value,
+            d2v = document.getElementById("d2").value;
+          const now = d1v ? new Date(d1v) : new Date();
+          const mn = [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "07",
+            "08",
+            "09",
+            "10",
+            "11",
+            "12",
+          ];
+          const dateStr =
+            now.getFullYear() +
+            " оны " +
+            mn[now.getMonth()] +
+            " дугаар сарын " +
+            now.getDate() +
+            " өдөр";
+          const rangeStr =
+            d1v && d2v
+              ? d1v.replaceAll("-", ".") + " - " + d2v.replaceAll("-", ".")
+              : "";
+          const TW = 9746,
+            LBL = 1200,
+            DAY = Math.floor((TW - LBL) / 5);
+          const bdr = { style: BorderStyle.SINGLE, size: 6, color: "000000" };
+          const borders = { top: bdr, bottom: bdr, left: bdr, right: bdr };
+          function cell(text, opts = {}) {
+            const lines = text.split("\n").filter(Boolean);
+            return new TableCell({
+              borders,
+              width: { size: opts.w || DAY, type: WidthType.DXA },
+              shading: opts.shade
+                ? { fill: opts.shade, type: ShadingType.CLEAR }
+                : undefined,
+              verticalAlign: VerticalAlign.CENTER,
+              margins: { top: 60, bottom: 60, left: 80, right: 80 },
+              children: lines.length
+                ? lines.map(
+                    (l) =>
+                      new Paragraph({
+                        alignment: AlignmentType.CENTER,
+                        children: [
+                          new TextRun({
+                            text: l,
+                            size: opts.sz || 18,
+                            font: "Arial",
+                          }),
+                        ],
+                      }),
+                  )
+                : [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "-",
+                          size: 18,
+                          font: "Arial",
+                        }),
+                      ],
+                    }),
+                  ],
+            });
+          }
+          function para(text, opts = {}) {
+            return new Paragraph({
+              alignment: opts.align || AlignmentType.LEFT,
+              spacing: { before: opts.before || 0, after: opts.after || 60 },
+              children: [
+                new TextRun({
+                  text,
+                  size: opts.sz || 20,
+                  font: "Arial",
+                }),
+              ],
+            });
+          }
+          const table = new Table({
+            width: { size: TW, type: WidthType.DXA },
+            columnWidths: [LBL, DAY, DAY, DAY, DAY, DAY],
+            rows: [
+              new TableRow({
+                tableHeader: true,
+                children: [
+                  cell("Гараг", {
+                    w: LBL,
+                    shade: "EEEEEE",
+                    sz: 19,
+                  }),
+                  ...DAYS.map((d) => cell(d, { shade: "EEEEEE", sz: 19 })),
+                ],
+              }),
+              ...MEALS.map(
+                (ml) =>
+                  new TableRow({
+                    children: [
+                      cell(ml.l + "\n/" + ml.s + "/", {
+                        w: LBL,
+                        shade: "EEEEEE",
+                      }),
+                      ...DAYS.map((_, d) => {
+                        const names = [...plan[d][ml.k]]
+                          .map((id) => {
+                            const f = foods.find((x) => x.id === id);
+                            return f ? f.n : "";
+                          })
+                          .filter(Boolean);
+                        return cell(names.join("\n") || "—");
+                      }),
+                    ],
+                  }),
+              ),
+              new TableRow({
+                children: [
+                  cell("Илчлэг", { w: LBL, shade: "F5F5F5" }),
+                  ...DAYS.map((_, d) => {
+                    let t = 0;
+                    MEALS.forEach((m) =>
+                      [...plan[d][m.k]].forEach((id) => {
+                        const f = foods.find((x) => x.id === id);
+                        if (f) t += f.k;
+                      }),
+                    );
+                    return cell(t + " ккал", { shade: "F5F5F5" });
+                  }),
+                ],
+              }),
+            ],
+          });
+          const doc = new Document({
+            sections: [
+              {
+                properties: {
+                  page: {
+                    size: { width: 11906, height: 16838 },
+                    margin: {
+                      top: 1080,
+                      right: 1080,
+                      bottom: 1260,
+                      left: 1080,
+                    },
+                  },
+                },
+                children: [
+                  para("БАТЛАВ", {
+                    align: AlignmentType.RIGHT,
+                    sz: 20,
+                  }),
+                  para("ӨЛГИЙ СУМЫН ХҮҮХДИЙН", {
+                    align: AlignmentType.RIGHT,
+                    sz: 19,
+                  }),
+                  para("4 ДҮГЭЭР ЦЭЦЭРЛЭГИЙН", {
+                    align: AlignmentType.RIGHT,
+                    sz: 19,
+                  }),
+                  para("ЭРХЛЭГЧ............./Н.БЕЙБИТГҮЛ/", {
+                    align: AlignmentType.RIGHT,
+                    sz: 19,
+                  }),
+                  para(dateStr, {
+                    align: AlignmentType.RIGHT,
+                    sz: 19,
+                    after: 200,
+                  }),
+                  para(
+                    "ӨЛГИЙ СУМЫН ХҮҮХДИЙН 4 ДҮГЭЭР ЦЭЦЭРЛЭГИЙН 5 ХОНОГИЙН ХООЛНЫ ЦЭС",
+                    {
+                      align: AlignmentType.CENTER,
+                      sz: 20,
+                      after: 60,
+                    },
+                  ),
+                  para(rangeStr, {
+                    align: AlignmentType.CENTER,
+                    sz: 18,
+                    after: 160,
+                  }),
+                  table,
+                  para("", { before: 280 }),
+                  para("Ахлах тогооч: ....................../Х. Жайнар/", {
+                    sz: 19,
+                    after: 40,
+                  }),
+                  para("Хянасан эмч: ......................./С. Халамхас/", {
+                    sz: 19,
+                  }),
+                ],
+              },
+            ],
+          });
+          const blob = await Packer.toBlob(doc);
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download =
+            "hoolnii_tses_" + (d1v || "").replaceAll("-", "") + ".docx";
+          a.click();
+          URL.revokeObjectURL(url);
+          toast("Word файл татагдлаа ✓");
+        } catch (e) {
+          console.error(e);
+          alert("Алдаа: " + e.message);
+        } finally {
+          btn.innerHTML =
+            '<i class="ti ti-file-word" aria-hidden="true"></i> Word татах';
+          btn.disabled = false;
+        }
+      }
+
+      /* ── Init ── */
+      renderTable();
+      renderCats();
+      renderPickList();
+      renderMobCats();
+      updateDate();
+    </script>
+  </body>
+</html>
